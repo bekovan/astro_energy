@@ -2,7 +2,7 @@
   "domain": "astro_energy",
   "name": "ASTRO Energy",
   "categories": ["energy.solar_batteries"],
-  "codeowners": ["bekovan"],
+  "codeowners": ["@bekovan"],
   "config_flow": true,
   "dependencies": ["modbus"],
   "documentation": "https://github.com/bekovan/astro_energy.git",
