@@ -1,0 +1,88 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Solarman V5 data logger",
+        "description": "A Solarman V5 data logging stick bridging the inverter's RS485 port. It answers on port 8899 with Modbus RTU inside its own V5 frames, not with Modbus TCP.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "unit_id": "Modbus unit ID",
+          "logger_serial": "Data logger serial (optional)"
+        },
+        "data_description": {
+          "host": "Host name or IP address of the data logger.",
+          "unit_id": "Slave address of the inverter. Usually 1.",
+          "logger_serial": "Leave empty to learn it from the logger's first answer."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "The inverter did not answer. Check the address, the wiring, and that it is powered and producing.",
+      "invalid_serial": "The data logger serial must be a number. Leave it empty to detect it automatically.",
+      "unknown": "Unexpected error. Check the Home Assistant log."
+    },
+    "abort": {
+      "already_configured": "This inverter is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ASTRO Energy options",
+        "data": {
+          "scan_interval": "Polling interval"
+        },
+        "data_description": {
+          "scan_interval": "The inverter needs several seconds per answer, so keep this well above 10 seconds."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pv1_voltage": {
+        "name": "PV1 voltage"
+      },
+      "pv1_current": {
+        "name": "PV1 current"
+      },
+      "pv1_power": {
+        "name": "PV1 power"
+      },
+      "pv2_voltage": {
+        "name": "PV2 voltage"
+      },
+      "pv2_current": {
+        "name": "PV2 current"
+      },
+      "pv2_power": {
+        "name": "PV2 power"
+      },
+      "dc_power": {
+        "name": "DC power"
+      },
+      "ac_voltage": {
+        "name": "AC voltage"
+      },
+      "ac_current": {
+        "name": "AC current"
+      },
+      "ac_frequency": {
+        "name": "AC frequency"
+      },
+      "ac_power": {
+        "name": "AC power"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "total_energy": {
+        "name": "Total energy"
+      },
+      "mppt_count": {
+        "name": "MPPT trackers"
+      }
+    }
+  }
+}
