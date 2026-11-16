@@ -27,7 +27,7 @@ vendor app, no internet access.
 | Data logger | Solarman V5 stick on the inverter's RS485 port, reachable on TCP port 8899 |
 
 The integration depends on Home Assistant's `modbus` integration, which supplies
-the `modbus-connection` library used for the register reads.
+the `modbus-connection` library used for the register reads..
 
 > The data logger serves one client at a time. Close the Solarman app, or any
 > other tool talking to the stick, while Home Assistant is polling — otherwise
