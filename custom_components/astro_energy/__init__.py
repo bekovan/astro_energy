@@ -1,27 +1,15 @@
 """Set up the ASTRO Energy integration."""
 
-from __future__ import annotations
-
 from datetime import timedelta
-from typing import TYPE_CHECKING
 
 from homeassistant.const import CONF_HOST, CONF_PORT, Platform
+from homeassistant.core import HomeAssistant
 
-from .const import (
-    CONF_LOGGER_SERIAL,
-    CONF_SCAN_INTERVAL,
-    CONF_UNIT_ID,
-    DEFAULT_SCAN_INTERVAL,
-)
+from .const import CONF_LOGGER_SERIAL, CONF_UNIT_ID, SCAN_INTERVAL
 from .coordinator import AstroEnergyCoordinator
-from .data import AstroEnergyData
+from .data import AstroEnergyConfigEntry, AstroEnergyData
 from .solarman_v5 import SolarmanV5Unit
 from .vendor.astro_modbus import AstroInverter
-
-if TYPE_CHECKING:
-    from homeassistant.core import HomeAssistant
-
-    from .data import AstroEnergyConfigEntry
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
@@ -43,9 +31,7 @@ async def async_setup_entry(
     entry.async_on_unload(unit.disconnect)
     device = AstroInverter(unit)
 
-    interval = timedelta(
-        seconds=entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-    )
+    interval = timedelta(seconds=SCAN_INTERVAL)
     coordinator = AstroEnergyCoordinator(
         hass, entry, device, device.async_update, interval
     )

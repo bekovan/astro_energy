@@ -26,8 +26,6 @@ Keep the scales here and the entity layer free of magic numbers: correcting a
 scale after a field report is a one-line change in this file.
 """
 
-from __future__ import annotations
-
 from modbus_connection.model import Component, gauge, integer, raw_register
 
 

@@ -1,26 +1,19 @@
 """DataUpdateCoordinator for the ASTRO Energy integration."""
 
-from __future__ import annotations
-
+from collections.abc import Awaitable, Callable
 from datetime import timedelta
 from functools import cached_property
-from typing import TYPE_CHECKING
 
-from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from modbus_connection import ModbusError, ModbusTimeoutError
 from modbus_connection.model import UpdateReport
 
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+
 from .const import DOMAIN, LOGGER
-from .vendor.astro_modbus import MANUFACTURER, MODEL
-
-if TYPE_CHECKING:
-    from collections.abc import Awaitable, Callable
-
-    from homeassistant.core import HomeAssistant
-
-    from .data import AstroEnergyConfigEntry
-    from .vendor.astro_modbus import AstroInverter
+from .data import AstroEnergyConfigEntry
+from .vendor.astro_modbus import MANUFACTURER, MODEL, AstroInverter
 
 #: A link that is up but silent is recycled after this many timeouts in a row.
 TIMEOUTS_BEFORE_DISCONNECT = 3
@@ -80,8 +73,8 @@ class AstroEnergyCoordinator(DataUpdateCoordinator[UpdateReport]):
             # Disconnect after each poll to avoid stream desync issues
             try:
                 await self.device.modbus_unit.disconnect()
-            except Exception:
-                pass
+            except OSError as err:
+                LOGGER.debug("Could not close the Modbus link: %s", err)
 
         self._timeouts = 0
         if not report.updated:

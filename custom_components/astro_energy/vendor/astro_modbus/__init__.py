@@ -18,8 +18,6 @@ Example::
     print(device.readings.ac_power)
 """
 
-from __future__ import annotations
-
 from .device import ALL, MANUFACTURER, MODEL, READINGS, AstroInverter
 from .readings import Readings
 

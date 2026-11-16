@@ -16,11 +16,9 @@ serial into every reply, so an unrecognised serial is learned from the first
 answer instead of being taken from the user.
 """
 
-from __future__ import annotations
-
 import asyncio
-import struct
 from collections.abc import Callable
+import struct
 from typing import Final
 
 from modbus_connection import (

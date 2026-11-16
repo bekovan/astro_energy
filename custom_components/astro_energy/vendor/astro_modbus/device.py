@@ -1,16 +1,11 @@
 """The top-level device object for an ASTRO Energy TM-L micro inverter."""
 
-from __future__ import annotations
-
 from collections.abc import Iterable
-from typing import TYPE_CHECKING
 
+from modbus_connection import ModbusUnit
 from modbus_connection.model import Device, Raw, UpdateReport
 
 from .readings import Readings
-
-if TYPE_CHECKING:
-    from modbus_connection import ModbusUnit
 
 MANUFACTURER = "ASTRO Energy"
 """Name the device reports in the Home Assistant device registry."""

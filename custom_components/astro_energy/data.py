@@ -1,7 +1,5 @@
 """Custom types for the ASTRO Energy integration."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -17,4 +15,4 @@ type AstroEnergyConfigEntry = ConfigEntry[AstroEnergyData]
 class AstroEnergyData:
     """Runtime data held by a loaded config entry."""
 
-    coordinator: AstroEnergyCoordinator
+    coordinator: "AstroEnergyCoordinator"

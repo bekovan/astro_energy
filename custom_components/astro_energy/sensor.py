@@ -1,9 +1,7 @@
 """Sensor platform for the ASTRO Energy integration."""
 
-from __future__ import annotations
-
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from homeassistant.components.sensor import (
     RestoreSensor,
@@ -21,19 +19,13 @@ from homeassistant.const import (
     UnitOfPower,
     UnitOfTemperature,
 )
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
+from .coordinator import AstroEnergyCoordinator
+from .data import AstroEnergyConfigEntry
 from .entity import AstroEnergyEntity
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
-    from homeassistant.core import HomeAssistant
-    from homeassistant.helpers.entity_platform import AddEntitiesCallback
-
-    from .coordinator import AstroEnergyCoordinator
-    from .data import AstroEnergyConfigEntry
-    from .vendor.astro_modbus import AstroInverter
+from .vendor.astro_modbus import AstroInverter
 
 #: The only sub-system this device has, as named in the update report.
 REPORT_NAME = "readings"
@@ -177,7 +169,7 @@ SENSORS: tuple[AstroSensorEntityDescription, ...] = (
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: AstroEnergyConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the sensor entities of one inverter."""
     coordinator = entry.runtime_data.coordinator

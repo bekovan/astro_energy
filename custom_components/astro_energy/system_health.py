@@ -1,16 +1,11 @@
 """System health platform for the ASTRO Energy integration."""
 
-from __future__ import annotations
+from typing import Any
 
-from typing import TYPE_CHECKING, Any
-
-from homeassistant.core import callback
+from homeassistant.components.system_health import SystemHealthRegistration
+from homeassistant.core import HomeAssistant, callback
 
 from .const import DOMAIN
-
-if TYPE_CHECKING:
-    from homeassistant.components.system_health import SystemHealthRegistration
-    from homeassistant.core import HomeAssistant
 
 
 @callback

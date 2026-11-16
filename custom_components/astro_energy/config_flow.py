@@ -1,18 +1,13 @@
-"""Config and options flow for the ASTRO Energy integration."""
-
-from __future__ import annotations
+"""Config flow for the ASTRO Energy integration."""
 
 import asyncio
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-import voluptuous as vol
-from homeassistant.config_entries import (
-    ConfigFlow,
-    ConfigFlowResult,
-    OptionsFlowWithReload,
-)
+from modbus_connection import ModbusError
+import probatio
+
+from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT
-from homeassistant.core import callback
 from homeassistant.helpers.selector import (
     NumberSelector,
     NumberSelectorConfig,
@@ -21,42 +16,34 @@ from homeassistant.helpers.selector import (
     TextSelectorConfig,
     TextSelectorType,
 )
-from modbus_connection import ModbusError
 
 from .const import (
     CONF_LOGGER_SERIAL,
-    CONF_SCAN_INTERVAL,
     CONF_UNIT_ID,
     CONNECT_TIMEOUT,
     DEFAULT_PORT,
-    DEFAULT_SCAN_INTERVAL,
     DEFAULT_UNIT_ID,
     DOMAIN,
     LOGGER,
-    MAX_SCAN_INTERVAL,
-    MIN_SCAN_INTERVAL,
 )
 from .solarman_v5 import SolarmanV5Unit
 from .vendor.astro_modbus import MODEL, AstroInverter
-
-if TYPE_CHECKING:
-    from .data import AstroEnergyConfigEntry
 
 UNIT_ID_SELECTOR = NumberSelector(
     NumberSelectorConfig(min=1, max=247, step=1, mode=NumberSelectorMode.BOX)
 )
 
-STEP_USER_SCHEMA = vol.Schema(
+STEP_USER_SCHEMA = probatio.Schema(
     {
-        vol.Required(CONF_HOST): vol.All(
+        probatio.Required(CONF_HOST): probatio.All(
             TextSelector(TextSelectorConfig(type=TextSelectorType.TEXT)),
-            vol.Length(min=1),
+            probatio.Length(min=1),
         ),
-        vol.Required(CONF_PORT, default=DEFAULT_PORT): NumberSelector(
+        probatio.Required(CONF_PORT, default=DEFAULT_PORT): NumberSelector(
             NumberSelectorConfig(min=1, max=65535, step=1, mode=NumberSelectorMode.BOX)
         ),
-        vol.Required(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): UNIT_ID_SELECTOR,
-        vol.Optional(CONF_LOGGER_SERIAL, default=""): TextSelector(
+        probatio.Required(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): UNIT_ID_SELECTOR,
+        probatio.Optional(CONF_LOGGER_SERIAL, default=""): TextSelector(
             TextSelectorConfig(type=TextSelectorType.TEXT)
         ),
     }
@@ -128,43 +115,3 @@ class AstroEnergyConfigFlow(ConfigFlow, domain=DOMAIN):
         if not text.isdigit():
             return None
         return int(text) or None
-
-    @staticmethod
-    @callback
-    def async_get_options_flow(
-        config_entry: AstroEnergyConfigEntry,
-    ) -> AstroEnergyOptionsFlow:
-        """Return the options flow."""
-        return AstroEnergyOptionsFlow()
-
-
-class AstroEnergyOptionsFlow(OptionsFlowWithReload):
-    """Change how often the inverter is polled."""
-
-    async def async_step_init(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        """Show and store the polling interval."""
-        if user_input is not None:
-            return self.async_create_entry(data=user_input)
-        return self.async_show_form(
-            step_id="init",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        CONF_SCAN_INTERVAL,
-                        default=self.config_entry.options.get(
-                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-                        ),
-                    ): NumberSelector(
-                        NumberSelectorConfig(
-                            min=MIN_SCAN_INTERVAL,
-                            max=MAX_SCAN_INTERVAL,
-                            step=1,
-                            mode=NumberSelectorMode.BOX,
-                            unit_of_measurement="s",
-                        )
-                    )
-                }
-            ),
-        )

@@ -26,19 +26,6 @@
       "already_configured": "This inverter is already configured."
     }
   },
-  "options": {
-    "step": {
-      "init": {
-        "title": "ASTRO Energy options",
-        "data": {
-          "scan_interval": "Polling interval"
-        },
-        "data_description": {
-          "scan_interval": "The inverter needs several seconds per answer, so keep this well above 10 seconds."
-        }
-      }
-    }
-  },
   "entity": {
     "sensor": {
       "pv1_voltage": {
